@@ -1,20 +1,39 @@
-import Image from 'next/image'
-import {Inter} from 'next/font/google'
-import {AxiosGet} from "@/app/components/AxiosGet";
-import {AxiosPost} from "@/app/components/AxiosPost";
-
-const inter = Inter({subsets: ['latin']})
+"use client";
+import React, { useState } from "react";
+import { AxiosGet } from "@/app/components/AxiosGet";
+import { AxiosPost } from "@/app/components/AxiosPost";
+import { AxiosPut } from "@/app/components/AxiosPut";
+import { AxiosDelete } from "@/app/components/AxiosDelete";
 
 export default function Home() {
-    return (
+  const data = { firstName: "", lastName: "" };
+  const [input, setInput] = useState(data);
 
-        <div>
-            <div className="text-center text-cyan-500 font-bold text-7xl mb-5"> Axios Get</div>
-            <AxiosGet/>
+  return (
+    <div>
+      <div className="text-center text-cyan-500 font-bold text-7xl mb-5">
+        {" "}
+        Axios Get
+      </div>
+      <AxiosGet />
 
-            <div className="text-center text-cyan-500 font-bold text-7xl mb-5"> Axios Post</div>
-            <AxiosPost/>
+      <div className="text-center text-cyan-500 font-bold text-7xl mb-5">
+        {" "}
+        Axios Post
+      </div>
+      <AxiosPost input={input} setInput={setInput} />
 
-        </div>
-    )
+      <div className="text-center text-cyan-500 font-bold text-7xl mb-5">
+        {" "}
+        Axios Put
+        <AxiosPut input={input} />
+      </div>
+
+      <div className="text-center text-cyan-500 font-bold text-7xl mb-5">
+        {" "}
+        Axios Delete
+        <AxiosDelete input={input} />
+      </div>
+    </div>
+  );
 }
