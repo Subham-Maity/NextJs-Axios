@@ -1,4 +1,10 @@
+## Table of Contents
 
+- [Axios Get Request in NextJS](#axios-get-request-in-nextjs)
+  - [What is Axios and why use it?](#what-is-axios-and-why-use-it)
+  - [How to install and use Axios in NextJS?](#how-to-install-and-use-axios-in-nextjs)
+  - [How does it work and what are the key concepts?](#how-does-it-work-and-what-are-the-key-concepts)
+_________
 ## Axios Get Request in NextJS 
 
 In this article, you will learn how to use Axios, a popular library for making HTTP requests in JavaScript, in your NextJS app. You will also learn how to fetch data from an API using Axios and display it on your page using React hooks.
