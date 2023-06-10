@@ -4,11 +4,16 @@ import { AxiosGet } from "@/app/components/AxiosGet";
 import { AxiosPost } from "@/app/components/AxiosPost";
 import { AxiosPut } from "@/app/components/AxiosPut";
 import { AxiosDelete } from "@/app/components/AxiosDelete";
+import { DataDisplay } from "@/app/components/DataDisplay";
 
 export default function Home() {
   const data = { firstName: "", lastName: "" };
   const [input, setInput] = useState(data);
+  const [displayData, setDisplayData] = useState(null);
 
+  const handleDisplay = (responseData: any) => {
+    setDisplayData(responseData);
+  };
   return (
     <div>
       <div className="text-center text-cyan-500 font-bold text-7xl mb-5">
@@ -33,6 +38,7 @@ export default function Home() {
         {" "}
         Axios Delete
         <AxiosDelete input={input} />
+        {displayData && <DataDisplay data={displayData} />}
       </div>
     </div>
   );

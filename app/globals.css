@@ -19,7 +19,8 @@ p {
     letter-spacing: 0.05em;
     text-transform: none;
     font-variant: normal;
-    margin: 0;
+
+    margin-top: 20px;
     padding: 0;
     border: 0;
     vertical-align: baseline;
