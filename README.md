@@ -1,262 +1,325 @@
-## Table of Contents
+# How to Use Axios with React: A Beginner's Guide
 
-- [Axios Get Request in NextJS](#axios-get-request-in-nextjs)
-  - [What is Axios and why use it?](#what-is-axios-and-why-use-it)
-  - [How to install and use Axios in NextJS?](#how-to-install-and-use-axios-in-nextjs)
-  - [How does it work and what are the key concepts?](#how-does-it-work-and-what-are-the-key-concepts)
-_________
-## Axios Get Request in NextJS 
+Table of Contents (TOC)
 
-In this article, you will learn how to use Axios, a popular library for making HTTP requests in JavaScript, in your NextJS app. You will also learn how to fetch data from an API using Axios and display it on your page using React hooks.
 
-### What is Axios and why use it?
 
-Axios is a library that allows you to make HTTP requests from your browser or Node.js server. It has many features, such as:
+  - [What is Axios?](#what-is-axios)
+  - [Why Use Axios in React?](#why-use-axios-in-react)
+  - [How to Set Up Axios with React](#how-to-set-up-axios-with-react)
+  - [How to Make a GET Request (Retrieve Data)](#how-to-make-a-get-request-retrieve-data)
+  - [How to Make a POST Request (Create Data)](#how-to-make-a-post-request-create-data)
+  - [How to Make a PUT Request (Update Data)](#how-to-make-a-put-request-update-data)
+  - [How to Make a DELETE Request (Delete Data)](#how-to-make-a-delete-request-delete-data)
+  - [How to Handle Errors with Axios](#how-to-handle-errors-with-axios)
+  - [How to Use useState with Axios](#how-to-use-usestate-with-axios)
+  - [How to Display Data with map](#how-to-display-data-with-map)
+  - [Putting It All Together](#putting-it-all-together)
+  - [Conclusion](#conclusion)
+________
+## Check This Project for more Understanding
 
-- Interceptors: You can intercept requests or responses before they are handled by then or catch.
-- Cancel token: You can cancel a request using a cancel token.
-- Transform request and response data: You can modify the request or response data before it is sent or received.
-- Automatic JSON data transformation: You can send and receive JSON data without manually parsing or stringifying it.
-- Customizable headers: You can set or modify the headers for each request.
-- CSRF protection: You can automatically send a CSRF token with each request if needed.
+- [**Github**](https://github.com/Subham-Maity/axios-tutorial)
+- [**Live Demo**](https://axios-easy-tutorial.vercel.app/)
 
-Axios is a good choice for making HTTP requests in NextJS because it works both on the client-side and the server-side. NextJS is a framework that allows you to create React apps with server-side rendering (SSR) and static site generation (SSG). This means that some of your pages may be rendered on the server before being sent to the browser, while others may be rendered on the browser after fetching data from an API.
+______
 
-Axios can handle both scenarios seamlessly, as it can detect whether it is running on the browser or the server and use the appropriate method to make requests. For example, if you use axios.get() on the server, it will use Node.js's http module, while if you use it on the browser, it will use XMLHttpRequest or fetch.
+You will learn how to use Axios with React to make different types of HTTP requests. Axios is a popular library that allows you to perform various operations on data from an API endpoint. You will also learn some basic concepts of React, such as `useEffect`, `useState`, and `map`.
 
-### How to install and use Axios in NextJS?
+## What is Axios?
 
-To install Axios in your NextJS project, you can run the following command:
+Axios is an HTTP client library that allows you to make requests to a given endpoint. This could be an external API or your own backend server, for example. By making a request, you expect your API to perform an operation according to the request you made. For example, if you make a GET request, you expect to get back data to display in your application.
+
+## Why Use Axios in React?
+
+There are many reasons why you should use Axios as your client to make HTTP requests, but here are some of the main ones:
+
+- It has good defaults to work with JSON data. Unlike alternatives such as the Fetch API, you often don't need to set your headers or perform tedious tasks like converting your request body to a JSON string.
+- It has function names that match any HTTP methods. To perform a GET request, you use the `.get()` method.
+- It does more with less code. Unlike the Fetch API, you only need one `.then()` callback to access your requested JSON data.
+- It has better error handling. Axios throws 400 and 500 range errors for you. Unlike the Fetch API, where you have to check the status code and throw the error yourself.
+- It can be used on the server as well as the client. If you are writing a Node.js application, be aware that Axios can also be used in an environment separate from the browser.
+
+## How to Set Up Axios with React
+
+Using Axios with React is a very simple process. You need three things:
+
+- An existing React project
+- To install Axios with npm/yarn
+- An API endpoint for making requests
+
+The quickest way to create a new React project is by using [Create React App](https://create-react-app.dev/). If you have an existing React project, you just need to install Axios with npm (or any other package manager):
 
 ```bash
-npm install --save axios
+npm install axios
 ```
 
-To use Axios in your NextJS app, you can import it in any component or page where you need to make HTTP requests. For example, let's say you want to fetch some user data from an API and display it on your page using React hooks. You can create a component called `AxiosGet.tsx` and write the following code:
+In this article, you will use the [JSON Placeholder API](https://jsonplaceholder.typicode.com/) to get and change post data. Here is a list of all the different routes you can make requests to, along with the appropriate HTTP method for each:
 
-```tsx
-// AxiosGet.tsx
-"use client"
-import React, {useEffect, useState} from "react";
+| Route | Method | Description |
+| --- | --- | --- |
+| /posts | GET | Get all posts |
+| /posts/1 | GET | Get post with id 1 |
+| /posts | POST | Create a new post |
+| /posts/1 | PUT | Update post with id 1 |
+| /posts/1 | DELETE | Delete post with id 1 |
+
+## How to Make a GET Request (Retrieve Data)
+
+To make a GET request with Axios, you need to use the `.get()` method and pass in the URL of the endpoint you want to fetch data from. For example, if you want to get all posts from the JSON Placeholder API, you would write something like this:
+
+```js
 import axios from "axios";
 
-export const AxiosGet = () => {
-    const [userData, setData] = useState<any[]>([]);
-
-    useEffect(() => {
-        axios.get("https://jsonplaceholder.typicode.com/users")
-            .then((response) => {
-                console.log(response);
-                setData(response.data);
-            });
-    }, []);
-
-    return (
-        <div>
-            {userData.map((data: any, index: number) => {
-                return <p key={index}>{data.name}</p>;
-            })}
-        </div>
-    );
-};
+axios.get("https://jsonplaceholder.typicode.com/posts")
+  .then(response => {
+    // handle success
+    console.log(response.data);
+  })
+  .catch(error => {
+    // handle error
+    console.error(error);
+  });
 ```
 
-Let's break down this code:
+The `.get()` method returns a promise, which means that you can use `.then()` and `.catch()` callbacks to handle the response or the error. The response object contains various properties, such as `status`, `headers`, and `data`. The `data` property is what we are interested in, as it contains the JSON array of posts.
 
-- First, we import React, useEffect, useState and axios. We also use `"use client"` to indicate that this component should only run on the client-side, not on the server-side.
-- Next, we create a state variable called `userData` using useState hook. We initialize it with an empty array and set its type to `any[]`. This means that we can store any kind of data in this array, but we lose some type safety. If you want to be more specific about the type of data you are fetching, you can define an interface or a type for it and use that instead of `any`.
-- Then, we use useEffect hook to run a function when the component mounts. This function will make a GET request to `https://jsonplaceholder.typicode.com/users`, which is a fake API that returns some user data. We use axios.get() method to make the request and pass the URL as an argument. We also chain a then() method to handle the response. We log the response object to the console and set the `userData` state with the response.data property, which contains an array of user objects.
-- Finally, we return a JSX element that maps over the `userData` array and renders a paragraph for each user with their name.
+## How to Make a POST Request (Create Data)
 
-To use this component in your page, you can import it and render it inside your page component. For example, you can create a page called `page.tsx` and write the following code:
+To make a POST request with Axios, you need to use the `.post()` method and pass in two arguments: the URL of the endpoint you want to send data to, and an object containing the data you want to create. For example, if you want to create a new post with some dummy data, you would write something like this:
 
-```tsx
-// page.tsx
+```js
+import axios from "axios";
+
+const newPost = {
+  title: "Hello World",
+  body: "This is a new post",
+  userId: 1
+};
+
+axios.post("https://jsonplaceholder.typicode.com/posts", newPost)
+  .then(response => {
+    // handle success
+    console.log(response.data);
+  })
+  .catch(error => {
+    // handle error
+    console.error(error);
+  });
+```
+
+The `.post()` method also returns a promise, which means that you can use `.then()` and `.catch()` callbacks to handle the response or the error. The response object contains the same properties as the GET request, but the `data` property now contains the newly created post, along with an `id` generated by the API.
+
+## How to Make a PUT Request (Update Data)
+
+To make a PUT request with Axios, you need to use the `.put()` method and pass in two arguments: the URL of the endpoint you want to update data on, and an object containing the data you want to update. For example, if you want to update the title and body of the post with id 1, you would write something like this:
+
+```js
+import axios from "axios";
+
+const updatedPost = {
+  title: "Hello World Updated",
+  body: "This is an updated post",
+  userId: 1
+};
+
+axios.put("https://jsonplaceholder.typicode.com/posts/1", updatedPost)
+  .then(response => {
+    // handle success
+    console.log(response.data);
+  })
+  .catch(error => {
+    // handle error
+    console.error(error);
+  });
+```
+
+The `.put()` method also returns a promise, which means that you can use `.then()` and `.catch()` callbacks to handle the response or the error. The response object contains the same properties as the GET and POST requests, but the `data` property now contains the updated post.
+
+## How to Make a DELETE Request (Delete Data)
+
+To make a DELETE request with Axios, you need to use the `.delete()` method and pass in one argument: the URL of the endpoint you want to delete data from. For example, if you want to delete the post with id 1, you would write something like this:
+
+```js
+import axios from "axios";
+
+axios.delete("https://jsonplaceholder.typicode.com/posts/1")
+  .then(response => {
+    // handle success
+    console.log(response.data);
+  })
+  .catch(error => {
+    // handle error
+    console.error(error);
+  });
+```
+
+The `.delete()` method also returns a promise, which means that you can use `.then()` and `.catch()` callbacks to handle the response or the error. The response object contains the same properties as the GET, POST, and PUT requests, but the `data` property is now an empty object.
+
+## How to Handle Errors with Axios
+
+As you have seen, Axios throws errors for you when the status code of the response is in the 400 or 500 range. This means that you can use the `.catch()` callback to handle any errors that may occur during your requests. For example, if you try to make a GET request to an invalid endpoint, you would get an error like this:
+
+```js
+import axios from "axios";
+
+axios.get("https://jsonplaceholder.typicode.com/invalid")
+  .then(response => {
+    // handle success
+    console.log(response.data);
+  })
+  .catch(error => {
+    // handle error
+    console.error(error);
+  });
+```
+
+The error object contains various properties, such as `message`, `name`, `stack`, and `config`. The `message` property is what we are interested in, as it contains a brief description of what went wrong. For example, in this case, the message would be:
+
+```
+Error: Request failed with status code 404
+```
+
+You can use this message to display a user-friendly error message in your application or perform some other action based on the error.
+
+## How to Use useState with Axios
+
+To display the data that you fetch from the API, you need to use another React hook called `useState`. `useState` is a hook that lets you add a state variable to your component. A state variable is a piece of data that can change over time and affect your UI.
+
+To use `useState`, you need to pass in an initial value and get back an array with two elements: the current state value and a function to update it. For example, if you want to have a state variable called `posts` that holds an array of posts, you would write something like this:
+
+```js
+import React, { useState } from "react";
+
+function App() {
+  const [posts, setPosts] = useState([]);
+  // ...
+}
+```
+
+The convention is to name the state variable and the update function like `[something, setSomething]` using array destructuring. The initial value can be any type, but in this case, we use an empty array because we expect our data to be an array of posts.
+
+To update the state value, you need to call the update function and pass in the new value. For example, if you want to set the posts state to the data that you get from the API, you would write something like this:
+
+```js
+import React, { useState } from "react";
+import axios from "axios";
+
+function App() {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    axios.get("https://jsonplaceholder.typicode.com/posts")
+      .then(response => {
+        // handle success
+        console.log(response.data);
+        // update state
+        setPosts(response.data);
+      })
+      .catch(error => {
+        // handle error
+        console.error(error);
+      });
+  }, []);
+
+  // ...
+}
+```
+
+Notice that we call `setPosts` inside the `.then()` callback of the Axios request. This way, we ensure that we only update the state when we have a successful response. Also notice that we pass in `response.data` as the new value, which is the array of posts that we want.
+
+## How to Display Data with map
+
+Now that we have our data in our state variable, we need to display it in our UI. To do this, we need to use a JavaScript method called `map`. `map` is a method that takes an array and returns a new array with each element transformed by a function.
+
+To use `map`, you need to pass in a callback function that takes an element of the original array and returns a new element for the new array. For example, if you want to map an array of numbers to an array of strings, you would write something like this:
+
+```js
+const numbers = [1, 2, 3];
+const strings = numbers.map(number => number.toString());
+console.log(strings); // ["1", "2", "3"]
+```
+
+In React, we can use `map` to transform an array of data into an array of JSX elements. JSX elements are what React uses to render HTML elements in the browser. For example, if you want to map an array of posts to an array of paragraphs, you would write something like this:
+
+```js
 import React from "react";
-import { AxiosGet } from "./components/AxiosGet";
 
-export default function Page() {
+function App() {
+  const posts = [
+    { id: 1, title: "Hello World", body: "This is a post" },
+    { id: 2, title: "Hello React", body: "This is another post" },
+    { id: 3, title: "Hello Axios", body: "This is yet another post" }
+  ];
+
   return (
     <div>
-      <h1>Axios Get Example</h1>
-      <AxiosGet />
+      {posts.map(post => (
+        <p key={post.id}>{post.title}: {post.body}</p>
+      ))}
     </div>
   );
 }
 ```
 
-This page will render a heading with the text "Axios Get Example" and the `AxiosGet` component below it. The `AxiosGet` component will fetch the user data from the API and display it on the page.
+Notice that we use curly braces `{}` to embed JavaScript expressions inside JSX. Also notice that we use parentheses `()` to wrap our JSX elements inside the callback function. This is because JSX is not valid JavaScript syntax, so we need parentheses to tell JavaScript that it's an expression.
 
-Here is the folder structure of your NextJS app:
+Also notice that we use a `key` prop on each paragraph element. This is because React needs a way to identify each element in a list and keep track of changes. The `key` prop should be a unique and stable identifier for each element. In this case, we use the `id` property of each post object.
 
-```FolderStructure 
-axios-tutorial/
-├── app/
-│   ├── components/
-│   │   └── AxiosGet.tsx
-│   ├── page.tsx
-│   └── layout.tsx
-├── public/
-├── .eslintrc.json
-├── .gitignore
-├── README.md
-├── next.config.js
-├── package-lock.json
-├── package.json
-├── postcss.config.js
-├── tailwind.config.js
-└── tsconfig.json
-```
+## Putting It All Together
 
-### How does it work and what are the key concepts?
+Now that you know how to use Axios, useEffect, useState, and map with React, let's put it all together and create a simple app that displays posts from the JSON Placeholder API. Here is the complete code:
 
-Let's review some of the key concepts and how they work in this example:
-
-- **HTTP requests**: HTTP requests are messages that are sent from a client to a server to request or send some data. There are different types of HTTP requests, such as GET, POST, PUT, DELETE, etc. Each type has a different purpose and meaning. For example, GET requests are used to fetch data from a server, while POST requests are used to send data to a server. Axios allows you to make any type of HTTP request using its methods, such as axios.get(), axios.post(), axios.put(), etc.
-- **Axios methods**: Axios methods are functions that allow you to make HTTP requests using axios. They take an optional argument called `config`, which is an object that contains various options for customizing the request, such as headers, params, data, etc. For example, if you want to make a GET request with some query parameters, you can use axios.get() method and pass an object with a `params` property, like this:
-
-```tsx
-axios.get("https://example.com/api", {
-  params: {
-    name: "John",
-    age: 25,
-  },
-});
-```
-
-This will make a GET request to `https://example.com/api?name=John&age=25`.
-
-- **Axios responses**: Axios responses are objects that contain the data and information about the HTTP response from the server. They have several properties, such as data, status, statusText, headers, config, etc. For example, if you make a GET request to `https://jsonplaceholder.typicode.com/users`, you will get a response object like this:
-
-```json
-{
-  "data": [
-    {
-      "id": 1,
-      "name": "Leanne Graham",
-      "username": "Bret",
-      "email": "Sincere@april.biz",
-      // ...
-    },
-    // ...
-  ],
-  "status": 200,
-  "statusText": "OK",
-  "headers": {
-    // ...
-  },
-  "config": {
-    // ...
-  },
-}
-```
-
-The most important property is the `data` property, which contains the actual data from the server. In this case, it is an array of user objects. You can access this property using response.data or destructure it like this:
-
-```tsx
-axios.get("https://jsonplaceholder.typicode.com/users").then(({ data }) => {
-  // do something with data
-});
-```
-
-- **Promises**: Promises are objects that represent the eventual completion or failure of an asynchronous operation. They have two methods: then() and catch(). You can use then() method to handle the successful outcome of a promise and catch() method to handle the error outcome of a promise. For example, if you make a GET request using axios.get(), it will return a promise that will either resolve with a response object or reject with an error object. You can use then() and catch() methods to handle both cases:
-
-```tsx
-axios
-  .get("https://jsonplaceholder.typicode.com/users")
-  .then((response) => {
-    // handle success
-    console.log(response);
-  })
-  .catch((error) => {
-    // handle error
-    console.log(error);
-  });
-```
-
-You can also use async/await syntax to handle promises in a more readable way. Async/await syntax allows you to write asynchronous code as if it was synchronous code. You can use async keyword before a function declaration or expression to indicate that it is an asynchronous function. You can use await keyword before a promise to pause the execution of the function until the promise is resolved or rejected. For example,You can rewrite this code using async/await syntax like this:
-
-```tsx
-// AxiosGet.tsx
-"use client"
-import React, {useEffect, useState} from "react";
+```js
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-export const AxiosGet = () => {
-    const [userData, setData] = useState<any[]>([]);
+function App() {
+  const [posts, setPosts] = useState([]);
 
-    useEffect(() => {
-        // declare an async function
-        const fetchData = async () => {
-            // use try/catch to handle errors
-            try {
-                // use await to pause until the promise is resolved
-                const response = await axios.get("https://jsonplaceholder.typicode.com/users");
-                console.log(response);
-                setData(response.data);
-            } catch (error) {
-                // handle error
-                console.log(error);
-            }
-        };
-        // call the async function
-        fetchData();
-    }, []);
+  useEffect(() => {
+    axios.get("https://jsonplaceholder.typicode.com/posts")
+      .then(response => {
+        // handle success
+        console.log(response.data);
+        // update state
+        setPosts(response.data);
+      })
+      .catch(error => {
+        // handle error
+        console.error(error);
+      });
+  }, []);
 
-    return (
-        <div>
-            {userData.map((data: any, index: number) => {
-                return <p key={index}>{data.name}</p>;
-            })}
-        </div>
-    );
-};
+  return (
+    <div>
+      <h1>Posts</h1>
+      {posts.map(post => (
+        <p key={post.id}>{post.title}: {post.body}</p>
+      ))}
+    </div>
+  );
+}
+
+export default App;
 ```
 
-This code is equivalent to the previous one, but it is easier to read and understand.
+## Conclusion
 
-- **React hooks**: React hooks are functions that let you use state and other React features in your function components. They have a special syntax that starts with `use`, such as useState, useEffect, useContext, etc. You can also create your own custom hooks by combining the built-in hooks. React hooks have some rules that you need to follow, such as:
+In this article, you have learned how to use Axios with React to make different types of HTTP requests. You have also learned some basic concepts of React, such as useEffect, useState, and map. You have created a simple app that displays posts from the JSON Placeholder API.
 
-    - Only call hooks at the top level of your component. Don't call them inside loops, conditions, or nested functions.
-    - Only call hooks from React function components or custom hooks. Don't call them from regular JavaScript functions or class components.
+Here are some key points to remember:
 
-- **useState hook**: useState hook lets you declare a state variable in your function component. It takes an initial value as an argument and returns an array with two elements: the current state value and a function to update it. For example, in our code, we use useState hook to declare a state variable called `userData` and initialize it with an empty array:
+- Axios is an HTTP client library that allows you to make requests to a given endpoint and perform various operations on data.
+- Axios has good defaults to work with JSON data, function names that match HTTP methods, less code, better error handling, and cross-environment compatibility.
+- To use Axios with React, you need to install it with npm/yarn and import it in your component.
+- To make a GET request with Axios, you need to use the `.get()` method and pass in the URL of the endpoint you want to fetch data from.
+- To make a POST request with Axios, you need to use the `.post()` method and pass in the URL of the endpoint you want to send data to and an object containing the data you want to create.
+- To make a PUT request with Axios, you need to use the `.put()` method and pass in the URL of the endpoint you want to update data on and an object containing the data you want to update.
+- To make a DELETE request with Axios, you need to use the `.delete()` method and pass in the URL of the endpoint you want to delete data from.
+- To handle errors with Axios, you need to use the `.catch()` callback and access the `error.message` property.
+- useEffect is a hook that allows you to perform side effects in your component, such as fetching data from an API. You need to pass in a callback function that contains your side effect logic and an optional array of dependencies that tells React when to run your side effect.
+- useState is a hook that allows you to add a state variable to your component. You need to pass in an initial value and get back an array with the current state value and a function to update it. You can use any type as the initial value or the next value.
+- map is a method that takes an array and returns a new array with each element transformed by a function. You can use it to transform an array of data into an array of JSX elements. You need to pass in a callback function that takes an element of the original array and returns a JSX element for the new array. You also need to use a `key` prop on each JSX element.
 
-```tsx
-const [userData, setData] = useState<any[]>([]);
-```
-
-The first element of the array is the current value of `userData`, which is an empty array at first. The second element of the array is a function that we can use to update `userData` with a new value. We name this function `setData`, but you can name it anything you want. To update `userData` with a new value, we call `setData` with the new value as an argument:
-
-```tsx
-setData(response.data);
-```
-
-This will update `userData` with the data from the API response and re-render the component with the new state.
-
-- **useEffect hook**: useEffect hook lets you perform side effects in your function component. Side effects are anything that affects something outside of your component, such as fetching data from an API, setting up subscriptions, manipulating the DOM, etc. useEffect hook takes a function as an argument and runs it after every render by default. You can also pass a second argument, which is an array of dependencies, to control when the effect runs. For example, in our code, we use useEffect hook to fetch data from an API when the component mounts:
-
-```tsx
-useEffect(() => {
-  // fetch data from API
-}, []);
-```
-
-The second argument is an empty array, which means that the effect will only run once when the component mounts and not on subsequent renders. This is similar to componentDidMount lifecycle method in class components. If we want to run the effect on every render, we can omit the second argument:
-
-```tsx
-useEffect(() => {
-  // fetch data from API
-});
-```
-
-This is similar to componentDidUpdate lifecycle method in class components. If we want to run the effect only when some value changes, we can pass that value as a dependency in the array:
-
-```tsx
-useEffect(() => {
-  // fetch data from API based on roomId
-}, [roomId]);
-```
-
-This means that the effect will only run when `roomId` changes and not on other renders. This is useful for optimizing performance and avoiding unnecessary requests.
-
+I hope you enjoyed this article and learned something new. If you have any questions or feedback, feel free to leave a comment below. Happy coding! 😊
