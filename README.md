@@ -23,6 +23,13 @@ ________
 - [**Live Demo**](https://axios-easy-tutorial.vercel.app/)
 
 ______
+________
+## Read HERE
+
+- [**Hashnode**](https://codexam.hashnode.dev/how-to-use-axios-with-react-a-beginners-guide)
+- [**DevCommunity**](https://dev.to/codexam/how-to-use-axios-with-react-a-beginners-guide-13n2)
+
+______
 
 You will learn how to use Axios with React to make different types of HTTP requests. Axios is a popular library that allows you to perform various operations on data from an API endpoint. You will also learn some basic concepts of React, such as `useEffect`, `useState`, and `map`.
 
